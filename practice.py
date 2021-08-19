@@ -1,3 +1,15 @@
+def sum_numbers(start:int, end:int):
+    if start == end:
+        return start
+
+    mid = (start+end)//2
+    start = sum_numbers(start, mid)
+    end = sum_numbers(mid+1, end)
+
+    return start + end
+
+print(sum_numbers(1, 10))
+
 
 
 

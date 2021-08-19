@@ -1,11 +1,10 @@
-# https://www.acmicpc.net/problem/1074
+# https://www.acmicpc.net/problem/2110
+
 
 import sys
 a, b = map(int, sys.stdin.readline().split())
 house = [int(sys.stdin.readline()) for _ in range(a)]
 house.sort()
-
-print(house)
 
 start = 1
 end = house[-1] - house[0]
