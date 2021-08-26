@@ -1,14 +1,47 @@
-def sum_numbers(start:int, end:int):
-    if start == end:
-        return start
 
-    mid = (start+end)//2
-    start = sum_numbers(start, mid)
-    end = sum_numbers(mid+1, end)
 
-    return start + end
 
-print(sum_numbers(1, 10))
+import sys
+N = int(sys.stdin.readline())
+M = int(sys.stdin.readline())
+adjacent_lst = [[] for _ in range(N+1)]
+for i in range(M):
+    a, b = map(int, sys.stdin.readline().split())
+    adjacent_lst[a].append(b)
+    adjacent_lst[b].append(a)
+
+def dfs_iteration(graph, start):
+
+    visited = []
+    stack = [start]
+
+    while stack:
+
+        node = stack.pop()
+
+        if node not in visited:
+            visited.append(node)
+            for neighbor in graph[node]:
+                stack.append(neighbor)
+    
+    print(len(visited)-1)
+
+def dfs_recursion(graph, start, visited=[]):
+
+    visited.append(start)
+
+    for node in graph[start]:
+        if node not in visited:
+            dfs_recursion(graph, node, visited)
+
+    return len(visited)-1
+
+# dfs_iteration(adjacent_lst, 1)
+print(dfs_recursion(adjacent_lst, 1))
+
+
+
+
 
 
 
