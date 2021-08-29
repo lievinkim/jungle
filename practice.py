@@ -1,43 +1,28 @@
-
-
-
 import sys
+sys.setrecursionlimit(10**8)
+
 N = int(sys.stdin.readline())
-M = int(sys.stdin.readline())
-adjacent_lst = [[] for _ in range(N+1)]
-for i in range(M):
-    a, b = map(int, sys.stdin.readline().split())
-    adjacent_lst[a].append(b)
-    adjacent_lst[b].append(a)
 
-def dfs_iteration(graph, start):
+def dp_function(x, dp_table):
 
-    visited = []
-    stack = [start]
+    dp_table[0][0] = 1 
+    dp_table[0][1] = 2
+    dp_table[0][2] = 7
+    dp_table[1][2] = 0
 
-    while stack:
+    for i in range(3, x+1):
+        dp_table[1][i] = (dp_table[0][i-3] + dp_table[1][i-1]) % 1000000007
+        dp_table[0][i] = (3*dp_table[0][i-2] + 2*dp_table[0][i-1] + 2*dp_table[1][i]) % 1000000007
 
-        node = stack.pop()
+    return dp_table[0][x]
 
-        if node not in visited:
-            visited.append(node)
-            for neighbor in graph[node]:
-                stack.append(neighbor)
-    
-    print(len(visited)-1)
+dp_table = []
+for i in range(2):
+    dp_table.append([-1]+[0]*(N+1))
 
-def dfs_recursion(graph, start, visited=[]):
+print(dp_function(N, dp_table))
 
-    visited.append(start)
 
-    for node in graph[start]:
-        if node not in visited:
-            dfs_recursion(graph, node, visited)
-
-    return len(visited)-1
-
-# dfs_iteration(adjacent_lst, 1)
-print(dfs_recursion(adjacent_lst, 1))
 
 
 
