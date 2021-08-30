@@ -12,19 +12,19 @@ dp_table = [[-1]*N for _ in range(N)]
 
 def dp_matrix_chain(x, y, dp_table, matrix):
 
+    if x == y:
+        dp_table[x][y] = 0
+
     if dp_table[x][y] != -1:
         return dp_table[x][y]
-
-    if x == y:
-        return 0
     
     if x + 1 == y:
         return matrix[x][0] * matrix[x][1] * matrix[y][1]
     
     for i in range(x, y):
-        left = dp_matrix_chain[x, i, dp_table, matrix]
-        bottom = dp_matrix_chain[i+1, x, dp_table, matrix]
-        if dp_table[x][y] == -1 or dp_table[x][y] < left + bottom + matrix[x][0]*matrix[i][1]*matrix[y][1]:
+        left = dp_matrix_chain(x, i, dp_table, matrix)
+        bottom = dp_matrix_chain(i+1, y, dp_table, matrix)
+        if dp_table[x][y] == -1 or dp_table[x][y] > left + bottom + matrix[x][0]*matrix[i][1]*matrix[y][1]:
             dp_table[x][y] = left + bottom + matrix[x][0]*matrix[i][1]*matrix[y][1]
         
     return dp_table[x][y]
