@@ -1,47 +1,26 @@
-import sys
-sys.setrecursionlimit(10**8)
+def tsp(D):
+    N = len(D)
+    inf = float('inf')
+    ans = inf # 정답을 '무한'으로 초기화한다.
+    VISITED_ALL = (1 << N) - 1
 
-N = int(sys.stdin.readline())
+    def find_path(start, last, visited, tmp_dist):
+        
+        nonlocal ans
+        
+        if visited == VISITED_ALL:
+            return_home_dist = D[last][start] or inf
+            ans = min(ans, tmp_dist + return_home_dist)
+            return
 
-def dp_function(x, dp_table):
+        for city in range(N):
+            if visited & (1 << city) == 0 and D[last][city] != 0:
+                find_path(start, city, visited | (1 << city), tmp_dist + D[last][city])
+        
+    for c in range(N):
+        find_path(c, c, 1 << c, 0)
 
-    dp_table[0][0] = 1 
-    dp_table[0][1] = 2
-    dp_table[0][2] = 7
-    dp_table[1][2] = 0
-
-    for i in range(3, x+1):
-        dp_table[1][i] = (dp_table[0][i-3] + dp_table[1][i-1]) % 1000000007
-        dp_table[0][i] = (3*dp_table[0][i-2] + 2*dp_table[0][i-1] + 2*dp_table[1][i]) % 1000000007
-
-    return dp_table[0][x]
-
-dp_table = []
-for i in range(2):
-    dp_table.append([-1]+[0]*(N+1))
-
-print(dp_function(N, dp_table))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return ans
 
 
 
