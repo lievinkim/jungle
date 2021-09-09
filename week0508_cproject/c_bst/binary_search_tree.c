@@ -29,102 +29,198 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//
-// 1. 구조체 선언
-//
-typedef int item;
-typedef struct BinNode {
+// //
+// // 1. 구조체 및 함수 선언
+// //
+typedef struct bstree_node {
+    int key;
+    struct bstree_node *left;
+    struct bstree_node *right;    
+} bstree_node;
 
-    item data;
-    struct BinNode *parent;
-    struct BinNode *left_child;
-    struct BinNode *right_child;
+bstree_node *search(bstree_node *root, int x);
+bstree_node *find_min(bstree_node *root);
+bstree_node *find_max(bstree_node *root);
+bstree_node *root_node();
+bstree_node *new_node(int x);
+void *insert(bstree_node **root_ptr, int x);
+void *delete(bstree_node **root_ptr, int x);
+void inorder(bstree_node *root);
 
-} BinNode;
+// //
+// // 2. 메인 함수
+// //
+int main() {
 
-//
-// 2. 함수 선언
-//
-BinNode *create_node(item data);
-void insert_node(BinNode **root_ptr, BinNode *new_node);
-void display_bst(BinNode *root);
+    bstree_node *root;
+    root = root_node();
+    insert(&root,5);
+    insert(&root,1);
+    insert(&root,15);
+    insert(&root,9);
+    insert(&root,7);
+    insert(&root,12);
+    insert(&root,30);
+    insert(&root,25);
+    insert(&root,40);
+    insert(&root,45);
+    insert(&root,42);
 
+    inorder(root);
+    printf("\n");
 
-//
-// 3. 메인 함수
-//
-int main(void) {
-    BinNode *root = NULL;
+    delete(&root, 1);
+    inorder(root);
+    printf("\n");
 
-    insert_node(&root, create_node(50));
-    insert_node(&root, create_node(60));
-    display_bst(root);
+    delete(&root, 40);
+    inorder(root);
+    printf("\n");
+
+    delete(&root, 45);
+    inorder(root);
+    printf("\n");
+
+    delete(&root, 9);
+    inorder(root);
+    printf("\n");
+
+    delete(&root, 5);
+    inorder(root);
+    printf("\n");
 
     return 0;
 }
 
-//
-// 4. 함수 생성
-//
+// //
+// // 3. 함수 생성
+// //
 
-// 4-1. 노드 생성 함수
-BinNode *create_node(item data) {
-    BinNode *new_node;
-    new_node = (BinNode *)malloc(sizeof(BinNode));
+bstree_node *search(bstree_node *root, int x) {
 
-    if (new_node == NULL) {
-        fprintf(stderr, "메모리 할당 에러가 발생했습니다.\n");
-        exit(1);
+    if(root == NULL) {
+        printf("탐색할 노드가 없습니다.\n");
+        return NULL;
+    } else if (x == root->key) {
+        return root;
+    } else if (x < root->key) {
+        return search(root->left, x);
+    } else {
+        return search(root->right, x);
     }
 
-    new_node->data = data;
-    new_node->parent = NULL;
-    new_node->left_child = NULL;
-    new_node->right_child = NULL;
-
-    return (new_node);
 }
 
-// 4-2. 노드 삽입 함수
-void insert_node(BinNode **root_ptr, BinNode *new_node) {
+bstree_node *find_min(bstree_node *root) {
+    
+    if (root == NULL) {
+        printf("노드가 없습니다.\n");
+        return NULL;
+    } else if (root->left != NULL) {
+        return find_min(root->left);
+    }
 
-    BinNode *current_root = *root_ptr;
+    return root;
+    
+}
+
+bstree_node *find_max(bstree_node *root) {
+
+    if (root == NULL) {
+        printf("노드가 없습니다.\n");
+    } else if (root->right != NULL) {
+        return find_max(root->right);
+    }
+
+    return root;
+
+}
+
+bstree_node *root_node() {
+    bstree_node *root_node;
+    root_node = (bstree_node *)malloc(sizeof(bstree_node));
+    root_node = NULL;
+
+    return root_node;
+}
+
+bstree_node *new_node(int x) {
+
+    bstree_node *new_node;
+    new_node = (bstree_node *)malloc(sizeof(bstree_node));
+    new_node->key = x;
+    new_node->left = NULL;
+    new_node->right = NULL;
+
+    return new_node;
+
+}
+
+void *insert(bstree_node **root_ptr, int x) {
+
+    bstree_node *current_root = *root_ptr;
 
     if (current_root == NULL) {
-        *root_ptr = new_node;
+        *root_ptr = new_node(x);
+    } else if (x == current_root->key) {
+        printf("동일한 값을 갖는 노드가 이미 존재합니다.\n");
+    } else if (x < current_root->key) {
+        insert(&(current_root->left), x);
+    } else {
+        insert(&(current_root->right), x);
     }
 
-    if (new_node->data == current_root->data) {
-        printf("동일한 값을 갖는 노드가 이미 존재합니다.\n");
-        free(new_node);
-        return;
-    } else if (new_node->data < current_root->data) {
-        insert_node(&(current_root->left_child), new_node);
-    } else if (new_node->data > current_root->data) {
-        insert_node(&(current_root->right_child), new_node);
-    }
 }
 
-// 4-3. 이진탐색트리 표시 함수
-void display_bst(BinNode *root) {
-    BinNode *p = root;
+void *delete(bstree_node **root_ptr, int x) {
 
-    if (p == NULL) {
-        printf("표시할 노드가 없습니다.\n");
-        return;
+    bstree_node *current_root = *root_ptr;
+
+    if (current_root == NULL) {
+        printf("삭제 할 노드가 없습니다.\n");
     }
 
-    printf("NODE[%d] > ", p->data);
-    if (p->left_child != NULL) {
-        printf("[LEFT-%d]",p->left_child->data);
-    } else if (p->right_child != NULL) {
-        printf("[RIGHT-%d]", p->right_child->data);
-    }
-    printf("\n");
+    if (x < current_root->key) {
+        delete(&(current_root->left), x);
+    } else if (x > current_root->key) {
+        delete(&(current_root->right), x);
+    } else {
 
-    if (p->left_child != NULL) {
-        display_bst(p->left_child);
-    } else if (p->right_child != NULL) {
-        display_bst(p->right_child);
+        if (current_root->left==NULL && current_root->right==NULL) {
+            *root_ptr = NULL;
+            free(current_root);
+        }
+
+        else if (current_root->left==NULL || current_root->right==NULL) {
+            bstree_node *temp;
+            
+            if (current_root->left==NULL) {
+                temp = current_root->right;
+            } else {
+                temp = current_root->left;
+            }
+
+            *root_ptr = temp;
+        }
+
+        else {
+            bstree_node *temp;
+
+            temp = find_min(current_root->right);
+            (*root_ptr)->key = temp->key;
+            delete(&(current_root->right), temp->key);
+
+        }
+
+    }
+
+
+}
+
+void inorder(bstree_node *root) {
+    if(root!=NULL) {
+        inorder(root->left);
+        printf(" %d ", root->key); 
+        inorder(root->right);
     }
 }
