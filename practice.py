@@ -1,26 +1,127 @@
-def tsp(D):
-    N = len(D)
-    inf = float('inf')
-    ans = inf # 정답을 '무한'으로 초기화한다.
-    VISITED_ALL = (1 << N) - 1
+# -*- coding: utf-8 -*-
 
-    def find_path(start, last, visited, tmp_dist):
-        
-        nonlocal ans
-        
-        if visited == VISITED_ALL:
-            return_home_dist = D[last][start] or inf
-            ans = min(ans, tmp_dist + return_home_dist)
-            return
 
-        for city in range(N):
-            if visited & (1 << city) == 0 and D[last][city] != 0:
-                find_path(start, city, visited | (1 << city), tmp_dist + D[last][city])
-        
-    for c in range(N):
-        find_path(c, c, 1 << c, 0)
+n = 1
+info = [1,0,0,0,0,0,0,0,0,0,0]
+scores = [0]*11
 
-    return ans
+def knapsack_recursive(scores, info, cnt, currentIndex):
+
+    score1 = 0
+
+    if cnt >= info[currentIndex]:
+        score1 = scores[currentIndex] + knapsack_recursive(scores, info, cnt-info[currentIndex], currentIndex+1)
+
+    score2 = knapsack_recursive(scores, info, cnt, currentIndex+1)
+
+    return max(score1, score2)
+
+print(knapsack_recursive(scores, info, n, 0))
+
+
+# apeach_score = 0
+# apeach_cnt = n
+# for i in range(len(info)):
+#     if apeach_cnt > 0:
+#         apeach_score += 10-i
+#         apeach_cnt = apeach_cnt-info[i]
+#     else:
+#         break
+
+# ryan_info = [0]*11
+# ryan_score = 0
+# answer = []
+# cnt = n
+
+# for i in range(0, 10):
+#     for j in range(i+1, 10):
+
+
+#     info_index = i
+
+#     while cnt > 0:
+#         if (cnt > info[info_index]):
+#             ryan_info[info_index] = info[info_index]+1
+#             cnt = cnt - (info[info_index]+1)
+#             info_index+=1
+#             if info_index == 10:
+#                 ryan_info[info_index] = cnt
+#                 break
+#         else:
+#             info_index+=1
+#             if info_index == 10:
+#                 ryan_info[info_index] = cnt
+#                 break
+    
+#     temp_score = 0
+#     temp_cnt = n
+#     for i in range(len(ryan_info)):
+#         if ryan_info[i] != 0:
+#             temp_score += 10-i
+    
+#     if temp_score > ryan_score:
+#         answer = ryan_info
+#         ryan_score = max(ryan_score, temp_score)
+
+#     cnt = n
+#     ryan_info = [0]*11
+
+# apeach_score = 0
+# apeach_cnt = n
+# for i in range(len(info)):
+#     if info[i] != 0 and answer[i]==0:
+#         apeach_score += 10-i
+
+# if apeach_score > ryan_score:
+#     answer = [-1]
+
+# print(answer)
+
+
+
+
+
+
+
+
+
+# print(list_converted)
+
+# temp = ''
+# for i in range(len(converted)):
+#     if converted[i] != '0':
+#         temp = temp + converted[i]
+#         continue
+#     elif converted[i] == '0' and temp != '':
+#         list_converted.append(temp)
+#         temp = ''
+#     else:
+#         continue
+
+# if temp != '':
+#     list_converted.append(temp)
+
+# for number in list_converted:
+#     if is_prime(int(number)):
+#         answer += 1
+
+# print(answer)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
