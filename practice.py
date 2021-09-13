@@ -1,22 +1,38 @@
 # -*- coding: utf-8 -*-
 
+import sys
+n = int(sys.stdin.readline())
+input_lst = list(map(int, sys.stdin.readline().split()))
 
-n = 1
-info = [1,0,0,0,0,0,0,0,0,0,0]
-scores = [0]*11
+dp_table = [0]*n
+dp_table[0] = input_lst[0]
 
-def knapsack_recursive(scores, info, cnt, currentIndex):
+for i in range(1, n):
+    dp_table[i] = max(input_lst[i], dp_table[i-1]+input_lst[i])
 
-    score1 = 0
+print(max(dp_table))
 
-    if cnt >= info[currentIndex]:
-        score1 = scores[currentIndex] + knapsack_recursive(scores, info, cnt-info[currentIndex], currentIndex+1)
 
-    score2 = knapsack_recursive(scores, info, cnt, currentIndex+1)
+# dp = []
+# max_sum = 0
+# temp = 0
 
-    return max(score1, score2)
+# for i in range(n):
+#     if input_lst[i] > 0:
+#         temp += input_lst[i]
+#         print(temp)
+#     else:
+#         max_sum = max(max_sum, temp)
+#         temp = 0
 
-print(knapsack_recursive(scores, info, n, 0))
+# if max_sum == 0:
+#     temp = input_lst[0]
+#     for j in range(1, n):
+#         if input_lst[j] > temp:
+#             temp = input_lst[j]
+#     max_sum = temp
+
+# print(max_sum)
 
 
 # apeach_score = 0
