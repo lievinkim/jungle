@@ -3,6 +3,8 @@
         "limits": "c",
         "malloc.h": "c",
         "stdbool.h": "c",
-        "cstdlib": "c"
+        "cstdlib": "c",
+        "stdio.h": "c",
+        "string.h": "c"
     }
 }
