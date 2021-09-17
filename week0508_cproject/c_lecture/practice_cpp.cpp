@@ -1,31 +1,88 @@
 #include <iostream>
 #include <algorithm>
+#include <vector>
 
 using namespace std;
-long long dp[91];
 
 int main() {
 
-    int n;
+    int n, m;
+    int input_num;
     cin >> n;
+    cin >> m;
+    cin >> input_num;
 
-    dp[0] = 1;
-    dp[1] = 1;
-    dp[2] = 1;
-    dp[3] = 2;
-
-    for (int i=4; i<=90; i++) {
-        int temp = 0;
-        for (int j=0; j<=i-2; j++) {
-            temp += dp[j];
-        }
-        dp[i] = temp;
+    vector<int> num_lst;
+    while (input_num != 0) {
+        int temp = input_num % 10;
+        num_lst.push_back(temp);
+        input_num = input_num / 10;
     }
 
-    cout << dp[n] << endl;
+    reverse(num_lst.begin(), num_lst.end());
 
+    vector<int> answer;
+    for (int num : num_lst) {
+        while ((m > 0) && (answer.size()>0) && answer.back()<num) {
+            answer.pop_back();
+            m--;
+        }
+        answer.push_back(num);
+    }
+
+    if (m>0) {
+        for (int i=0; i<m; i++) {
+            while (answer.size()>0) {
+                answer.pop_back();
+            }
+        }        
+    }
+
+    for (int a : answer) {
+        cout << a;
+    }
+
+    
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// long long dp[91];
+
+// int main() {
+
+//     int n;
+//     cin >> n;
+
+//     dp[0] = 1;
+//     dp[1] = 1;
+//     dp[2] = 1;
+//     dp[3] = 2;
+
+//     for (int i=4; i<=90; i++) {
+//         int temp = 0;
+//         for (int j=0; j<=i-2; j++) {
+//             temp += dp[j];
+//         }
+//         dp[i] = temp;
+//     }
+
+//     cout << dp[n] << endl;
+
+//     return 0;
+// }
 
 
 
