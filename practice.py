@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 
 import sys
-n = int(sys.stdin.readline())
-input_lst = list(map(int, sys.stdin.readline().split()))
+n, m = map(int, sys.stdin.readline().split())
 
-dp_table = [0]*n
-dp_table[0] = input_lst[0]
+edges = []
+for i in range(n-1):
+    a, b = map(int, sys.stdin.readline().split())
+    edges.append([a, b])
 
-for i in range(1, n):
-    dp_table[i] = max(input_lst[i], dp_table[i-1]+input_lst[i])
+edges.sort(lambda x: (x))
 
-print(max(dp_table))
+print(edges)
 
 
 # dp = []

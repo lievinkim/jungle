@@ -1,50 +1,148 @@
 #include <iostream>
-#include <algorithm>
+#include <string>
 #include <vector>
-
+#include <algorithm>
+#include <queue>
 using namespace std;
 
+int findIndex(const vector< vector <int> > &arr, vector<int> item) {
+
+    for (int i = 0; i < arr.size(); ++i) {
+        if (arr[i] == item)
+            return i;
+    }
+
+    return -1;
+}
+
 int main() {
+    int m = 4;
+    int n = 3;
 
-    int n, m;
-    int input_num;
-    cin >> n;
-    cin >> m;
-    cin >> input_num;
+    vector<int> puddle;
+    puddle.push_back(2);
+    puddle.push_back(2);
+    vector< vector <int> > puddles;
+    puddles.push_back(puddle);
 
-    vector<int> num_lst;
-    while (input_num != 0) {
-        int temp = input_num % 10;
-        num_lst.push_back(temp);
-        input_num = input_num / 10;
-    }
-
-    reverse(num_lst.begin(), num_lst.end());
-
-    vector<int> answer;
-    for (int num : num_lst) {
-        while ((m > 0) && (answer.size()>0) && answer.back()<num) {
-            answer.pop_back();
-            m--;
+    // 방문 체크 생성
+    vector< vector <int> > visited;
+    for (int i=0; i<n; i++) {
+        for (int j=0; j<m; j++) {
+            visited[j][i] = 0; 
         }
-        answer.push_back(num);
     }
 
-    if (m>0) {
-        for (int i=0; i<m; i++) {
-            while (answer.size()>0) {
-                answer.pop_back();
-            }
-        }        
+    // 이동 가능 경로 생성
+    int dx[2], dy[2];
+    for (int i=0; i<=1; i++) {
+        dx[i] = i;
+        dy[i] = i;
     }
 
-    for (int a : answer) {
-        cout << a;
+    vector<int> init;
+    init.push_back(1);
+    init.push_back(1);
+    vector< vector<int> > queue;
+    queue.push_back(init);
+
+    while (queue.size() != 0) {
+        vector<int> temp;
+        temp = queue.back();
+        queue.pop_back();
+
+        if (visited[temp[0]][temp[1]] != 0 && temp[0] != m && temp[1] != n) {
+            continue;
+        }
+
+        visited[temp[0]][temp[1]] += 1;
+
+        
+        vector<int> index1;
+        index1.push_back(temp[1]+1);
+        index1.push_back(temp[0]);
+
+        if (findIndex(puddles, index1) != 0) {
+            queue.push_back(index1);
+        }
+
+        vector<int> index2;
+        index2.push_back(temp[1]+1);
+        index2.push_back(temp[0]);
+
+        if (findIndex(puddles, index2) != 0) {
+            queue.push_back(index2);
+        }
+
+
     }
 
     
+    cout << visited[m][n] << endl;
+    
     return 0;
 }
+
+
+
+
+
+
+
+// int u, v, n;
+// double cnt, w;
+// int a[500001];
+ 
+// int main() {
+//     cin >> n >> w;
+//     for(int i = 1 ; i<=n-1; i++)
+//     {
+//         cin >> u >> v;
+//         a[u]++;
+//         a[v]++;
+//     }
+//     for (int i = 2; i <= n; i++)
+//     {
+//         if (a[i] == 1)
+//         {
+//             cnt++;
+//         }
+//         //cout << a[i] << ' ';
+//     }
+//     printf("%.10f", w / cnt);
+    
+// }
+
+
+// int n, k;
+// string a;
+// vector<char> result;
+
+// int main() {
+
+//     cin >> n >> k >> a;
+
+//     int i = 0;
+//     while (i != a.size()) {
+//         while (k != 0 && !result.empty() && result.back() < a[i]) {
+//             result.pop_back();
+//             k--;
+//         }
+//         result.push_back(a[i]);
+//         i++;
+//     }
+
+//     while (k--) {
+//         result.pop_back();
+//     }
+
+//     for (int i=0; i<result.size(); i++) {
+//         cout << result[i];
+//     }
+
+ 
+//     return 0;
+// }
 
 
 
